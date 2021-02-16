@@ -25,7 +25,7 @@ public class ClientScannerInputService implements ClientService{
         while ((message = scanner.nextLine()) != null) {
             interceptInput(message);
             List<String> result = sendMessages(printWriter, bufferedReader, message);
-            result.forEach(System.out::print);
+            result.forEach(System.out::println);
         }
     }
 

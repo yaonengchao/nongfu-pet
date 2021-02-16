@@ -31,8 +31,7 @@ public class Task implements Runnable {
         try {
 
             String msg = null;
-            while (true) {
-//            while (!Thread.interrupted()) {
+            while (!Thread.interrupted()) {
                 //读取到服务端发送过来的消息
                 msg = bufferedReader.readLine();
                 if (msg == null || "".equals(msg)) {

@@ -15,9 +15,17 @@ public interface ClientService {
     /**
      * 拦截输入
      */
-    default void interceptInput(String inputStr) {
+    default boolean interceptInput(String inputStr) {
 
+        if (inputStr == null || "".equals(inputStr)) {
+            return false;
+        }
 
+        if (!"LIST".equals(inputStr) && !inputStr.startsWith("GET:")) {
+
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -29,6 +37,12 @@ public interface ClientService {
     void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException;
 
     default List<String> sendMessages(PrintWriter printWriter, BufferedReader bufferedReader, String message) throws IOException {
+
+        if (!interceptInput(message)) {
+            System.out.println("ERR");
+            return new ArrayList<>();
+        }
+
         List<String> list = new ArrayList<>();
 
         printWriter.println(message);
