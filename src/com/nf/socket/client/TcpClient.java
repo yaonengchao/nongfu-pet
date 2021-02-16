@@ -2,38 +2,36 @@ package com.nf.socket.client;
 
 import com.nf.socket.constant.Constant;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class TcpClient {
 
+    private ClientService clientService;
+
+    public TcpClient() {
+    }
+
+    public TcpClient(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
     public static void main(String[] args) throws IOException {
+        TcpClient tcpClient = new TcpClient(new ClientScannerInputService());
+        tcpClient.start();
+    }
+
+    public void start() throws IOException {
         System.out.println("客户端启动。。。。。");
+
         Socket socket = new Socket(Constant.IP, Constant.PORT);
-        String sendMsg = null;
-        BufferedReader bufferedReader = null;
-        PrintWriter printWriter = null;
         if (socket.isConnected()) {
-            try {
-                printWriter = new PrintWriter(socket.getOutputStream());
-                bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                Scanner scanner = new Scanner(System.in);
-                while ((sendMsg = scanner.nextLine()) != null) {
-                    printWriter.println(sendMsg);
-                    printWriter.flush();
-                    //确认消息
-                    String receiveMsg = null;//客户端发过来的信息
-                    char[] ch = new char[1024];
-                    int read = bufferedReader.read(ch);
-                    receiveMsg = new String(ch, 0, read);
-                    System.out.print(receiveMsg);
-                }
-            } finally {
-                if (printWriter != null)
-                    printWriter.close();
-                if (bufferedReader != null)
-                    bufferedReader.close();
+            try (PrintWriter printWriter = new PrintWriter(socket.getOutputStream()); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                //消息发送
+                clientService.sendMessagesByDIY(printWriter, bufferedReader);
             }
         }
         if (!socket.isClosed()) {
@@ -44,8 +42,6 @@ public class TcpClient {
             }
         }
 
-
     }
-
 
 }

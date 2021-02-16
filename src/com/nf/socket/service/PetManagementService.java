@@ -3,8 +3,10 @@ package com.nf.socket.service;
 
 import com.nf.socket.beans.Animal;
 import com.nf.socket.data.DataBase;
+import com.nf.socket.utils.Sorter;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,19 +50,12 @@ public class PetManagementService {
 
         Animal[] arr = animals.toArray(new Animal[0]);
 
-        //排序
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 1; j < arr.length; j++) {
-                if (arr[j].getCount() > arr[j - 1].getCount()) {
-                    Animal s = arr[j];
-                    arr[j] = arr[j - 1];
-                    arr[j - 1] = s;
-                }
+        Sorter<Animal> sorter = new Sorter<>();
 
-            }
-        }
+        //排序，返回  实现Comparator接口，进行设定排序规则
+        sorter.sort(arr, Comparator.comparingInt(Animal::getCount));
 
-        //排序，返回
+//        sorter.sort(arr, (a, b) -> Integer.compare(a.getCount(), b.getCount()));
 
         return arr;
     }

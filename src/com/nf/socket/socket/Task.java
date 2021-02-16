@@ -31,7 +31,8 @@ public class Task implements Runnable {
         try {
 
             String msg = null;
-            while (!Thread.interrupted()) {
+            while (true) {
+//            while (!Thread.interrupted()) {
                 //读取到服务端发送过来的消息
                 msg = bufferedReader.readLine();
                 if (msg == null || "".equals(msg)) {
@@ -42,14 +43,10 @@ public class Task implements Runnable {
                     //调用受欢迎程度的方法
                     Animal[] popularity = PetManagementService.popularity();
 
-                    StringBuilder sb = new StringBuilder();
-
-                    Stream.of(popularity).forEach(animal -> {
-                        sb.append(animal.toString());
-                        sb.append("\n");
-                    });
-                    sb.append("OK");
-                    printWriter.println(sb.toString());
+                    for (Animal animal : popularity) {
+                        printWriter.println(animal.toString());
+                    }
+                    printWriter.println("OK");
                 } else {
                     try {
                         String name = msg.split(":")[1];

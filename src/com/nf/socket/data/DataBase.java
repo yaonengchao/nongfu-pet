@@ -4,12 +4,16 @@ import com.nf.socket.beans.Animal;
 
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 模拟数据库
+ */
 public class DataBase {
     /**
      * 宠物类型
      */
-    public static Map<String, Animal> animalMap = new Hashtable<>();
+    public static Map<String, Animal> animalMap = new ConcurrentHashMap<>();
 
     static {
         animalMap.put("dog", new Animal("dog", 0));

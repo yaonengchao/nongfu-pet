@@ -3,7 +3,7 @@ package com.nf.socket.beans;
 public class Animal {
 
     /**
-     * 骑车总数
+     * 库存总数
      */
     private int total;
 
