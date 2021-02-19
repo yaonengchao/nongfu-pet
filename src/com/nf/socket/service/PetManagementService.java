@@ -9,11 +9,15 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 宠物管理
  */
 public class PetManagementService {
+
+    private static Lock lock = new ReentrantLock();
 
     /**
      * 判断宠物是否存在，存在，返回对象
@@ -31,10 +35,10 @@ public class PetManagementService {
      * @return
      */
     public void increment(String name) {
-        synchronized (PetManagementService.class) {
-            Animal animal = DataBase.animalMap.get(name);
-            animal.setCount(animal.getCount() + 1);
-        }
+        lock.lock();
+        Animal animal = DataBase.animalMap.get(name);
+        animal.setCount(animal.getCount() + 1);
+        lock.unlock();
     }
 
     /**

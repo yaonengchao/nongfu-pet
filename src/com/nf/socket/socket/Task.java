@@ -1,6 +1,8 @@
 package com.nf.socket.socket;
 
 import com.nf.socket.beans.Animal;
+import com.nf.socket.command.GetCommand;
+import com.nf.socket.command.ListCommand;
 import com.nf.socket.service.InventoryManagementService;
 import com.nf.socket.service.PetManagementService;
 
@@ -12,19 +14,25 @@ import java.util.stream.Stream;
 public class Task implements Runnable {
 
     private Socket socketClient = null;
-    private final PrintWriter printWriter;
+    private PrintWriter printWriter = null;
     private final BufferedReader bufferedReader;
+    private ListCommand listCommand = null;
+    private GetCommand getCommand = null;
+
 
     public Task(Socket socket) throws IOException {
         this.socketClient = socket;
         printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
         bufferedReader = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+        listCommand = new ListCommand(printWriter);
+        getCommand = new GetCommand(printWriter, petManagementService, inventoryManagementService);
     }
 
     //宠物管理服务
     PetManagementService petManagementService = new PetManagementService();
     //库存服务
     InventoryManagementService inventoryManagementService = new InventoryManagementService();
+
 
     @Override
     public void run() {
@@ -34,36 +42,17 @@ public class Task implements Runnable {
             while (!Thread.interrupted()) {
                 //读取到服务端发送过来的消息
                 msg = bufferedReader.readLine();
+
                 if (msg == null || "".equals(msg)) {
                     //错误，输入有误
                     printWriter.println("ERR");
-
                 } else if ("LIST".equals(msg)) { //客户端需要查询宠物的受欢迎的程度
-                    //调用受欢迎程度的方法
-                    Animal[] popularity = PetManagementService.popularity();
+                    //执行
+                    listCommand.execute(msg);
 
-                    for (Animal animal : popularity) {
-                        printWriter.println(animal.toString());
-                    }
-                    printWriter.println("OK");
                 } else {
-                    try {
-                        String name = msg.split(":")[1];
-                        //判断宠物是否存在
-                        Animal animal = petManagementService.getAnimal(name);
-                        if (animal == null) {
-                            printWriter.println("ERR");
-                        } else if (!inventoryManagementService.judgingInventory()) { //库存是否足够，因为一定足够
-                            printWriter.println("ERR");
-                        } else {
-                            //加一
-                            petManagementService.increment(animal.getName());
-                            printWriter.println("OK");
-                        }
-                    } catch (Exception e) {
-                        printWriter.println("ERR");
-                    }
-
+                    //执行
+                    getCommand.execute(msg);
                 }
             }
         } catch (IOException e) {

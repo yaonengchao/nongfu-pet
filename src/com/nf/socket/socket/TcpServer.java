@@ -15,7 +15,7 @@ public class TcpServer {
     /**
      * 定义一个线程池
      */
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(100);
 
     public static void main(String[] args) throws IOException {
         System.out.println("服务端serverSocket项目已经启动。。。。");
