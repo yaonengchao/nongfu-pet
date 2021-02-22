@@ -1,6 +1,5 @@
 package com.nf.socket.socket;
 
-import com.nf.socket.beans.Animal;
 import com.nf.socket.command.GetCommand;
 import com.nf.socket.command.ListCommand;
 import com.nf.socket.service.InventoryManagementService;
@@ -8,8 +7,6 @@ import com.nf.socket.service.PetManagementService;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 public class Task implements Runnable {
 
@@ -39,28 +36,33 @@ public class Task implements Runnable {
         try {
 
             String msg = null;
-            while (!Thread.interrupted()) {
+//            !Thread.interrupted()
+            while (!socketClient.isInputShutdown()) {
                 //读取到服务端发送过来的消息
                 msg = bufferedReader.readLine();
 
                 if (msg == null || "".equals(msg)) {
                     //错误，输入有误
                     printWriter.println("ERR");
+                } else if ("BEY".equals(msg)) {
+                    printWriter.println("OK");
+                    break;
                 } else if ("LIST".equals(msg)) { //客户端需要查询宠物的受欢迎的程度
                     //执行
                     listCommand.execute(msg);
-
                 } else {
                     //执行
                     getCommand.execute(msg);
                 }
             }
         } catch (IOException e) {
+            printWriter.println("ERR");
             e.printStackTrace();
         } finally {
             try {
-                if (socketClient != null)
+                if (socketClient != null){
                     socketClient.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

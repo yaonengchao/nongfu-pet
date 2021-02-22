@@ -3,6 +3,7 @@ package com.nf.socket.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,12 @@ public interface ClientService {
             return false;
         }
 
-        if (!"LIST".equals(inputStr) && !inputStr.startsWith("GET:")) {
+        if ("BEY".equals(inputStr)) {
+            System.out.println("bey");
+            return true;
+        }
 
+        if (!"LIST".equals(inputStr) && !inputStr.startsWith("GET:")) {
             return false;
         }
         return true;
@@ -34,7 +39,7 @@ public interface ClientService {
      * @param printWriter
      * @param bufferedReader
      */
-    void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException;
+    void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader, Socket socket) throws IOException;
 
     default List<String> sendMessages(PrintWriter printWriter, BufferedReader bufferedReader, String message) throws IOException {
 

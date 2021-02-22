@@ -2,7 +2,6 @@ package com.nf.socket.data;
 
 import com.nf.socket.beans.Animal;
 
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

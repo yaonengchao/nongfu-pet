@@ -24,7 +24,7 @@ public class ServerTest {
     public List<String> getListResult() {
         TcpClient tcpClient = new TcpClient(new ClientService() {
             @Override
-            public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
+            public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader,Socket socket) throws IOException {
                 String sendMsg = "LIST";
                 result = this.sendMessages(printWriter, bufferedReader, sendMsg);
             }
@@ -73,19 +73,16 @@ public class ServerTest {
 
             }
 
-
-            new Thread(() -> {
+            Thread t = new Thread(() -> {
 
                 TcpClient tcpClient = new TcpClient(new ClientService() {
 
                     @Override
-                    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
+                    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader,Socket socket) throws IOException {
                         String sendMsg = null;
+                        for (int number : numbers) {
 
-
-                        for (int i = 0; i < numbers.length; i++) {
-
-                            switch (numbers[i]) {
+                            switch (number) {
                                 case 0:
                                     sendMsg = "GET:dog";
                                     break;
@@ -104,18 +101,26 @@ public class ServerTest {
                             List<String> result = this.sendMessages(printWriter, bufferedReader, sendMsg);
                             result.forEach(System.out::print);
                         }
+                        this.sendMessages(printWriter, bufferedReader, "BEY");
+
                     }
                 });
                 try {
                     tcpClient.start();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 countDownLatch.countDown();
-            }).start();
+
+                System.out.println("。。。。。。。。。。。。创建了线程。。。。。。。。。。。。。。。。。。");
+
+            });
+            t.start();
         }
         try {
             countDownLatch.await();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
