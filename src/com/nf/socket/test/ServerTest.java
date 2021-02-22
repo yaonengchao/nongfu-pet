@@ -24,7 +24,7 @@ public class ServerTest {
     public List<String> getListResult() {
         TcpClient tcpClient = new TcpClient(new ClientService() {
             @Override
-            public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader,Socket socket) throws IOException {
+            public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
                 String sendMsg = "LIST";
                 result = this.sendMessages(printWriter, bufferedReader, sendMsg);
             }
@@ -78,7 +78,7 @@ public class ServerTest {
                 TcpClient tcpClient = new TcpClient(new ClientService() {
 
                     @Override
-                    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader,Socket socket) throws IOException {
+                    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
                         String sendMsg = null;
                         for (int number : numbers) {
 
@@ -113,7 +113,6 @@ public class ServerTest {
                 }
                 countDownLatch.countDown();
 
-                System.out.println("。。。。。。。。。。。。创建了线程。。。。。。。。。。。。。。。。。。");
 
             });
             t.start();

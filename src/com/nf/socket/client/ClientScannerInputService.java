@@ -20,7 +20,7 @@ public class ClientScannerInputService implements ClientService{
      * @param printWriter
      * @param bufferedReader
      */
-    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader, Socket socket) throws IOException {
+    public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
         String message = null;
         Scanner scanner = new Scanner(System.in);
         while ((message = scanner.nextLine()) != null) {

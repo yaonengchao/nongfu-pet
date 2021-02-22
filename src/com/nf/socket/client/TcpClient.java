@@ -31,7 +31,7 @@ public class TcpClient {
         if (socket.isConnected()) {
             try (PrintWriter printWriter = new PrintWriter(socket.getOutputStream()); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 //消息发送
-                clientService.sendMessagesByDIY(printWriter, bufferedReader,socket);
+                clientService.sendMessagesByDIY(printWriter, bufferedReader);
             }
         }
         if (!socket.isClosed()) {

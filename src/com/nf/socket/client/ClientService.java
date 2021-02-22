@@ -39,7 +39,7 @@ public interface ClientService {
      * @param printWriter
      * @param bufferedReader
      */
-    void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader, Socket socket) throws IOException;
+    void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException;
 
     default List<String> sendMessages(PrintWriter printWriter, BufferedReader bufferedReader, String message) throws IOException {
 

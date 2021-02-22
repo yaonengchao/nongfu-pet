@@ -44,6 +44,7 @@ public class Task implements Runnable {
                 if (msg == null || "".equals(msg)) {
                     //错误，输入有误
                     printWriter.println("ERR");
+                    break;
                 } else if ("BEY".equals(msg)) {
                     printWriter.println("OK");
                     break;
