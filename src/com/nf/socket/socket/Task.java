@@ -1,6 +1,6 @@
 package com.nf.socket.socket;
 
-import com.nf.socket.beans.Animal;
+import com.nf.socket.command.EndCommand;
 import com.nf.socket.command.GetCommand;
 import com.nf.socket.command.ListCommand;
 import com.nf.socket.service.InventoryManagementService;
@@ -8,8 +8,6 @@ import com.nf.socket.service.PetManagementService;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 public class Task implements Runnable {
 
@@ -18,11 +16,11 @@ public class Task implements Runnable {
     private final BufferedReader bufferedReader;
     private ListCommand listCommand = null;
     private GetCommand getCommand = null;
+    private EndCommand endCommand = new EndCommand();
 
-
-    public Task(Socket socket) throws IOException {
-        this.socketClient = socket;
-        printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+    public Task(Socket socketClient) throws IOException {
+        this.socketClient = socketClient;
+        printWriter = new PrintWriter(new OutputStreamWriter(socketClient.getOutputStream()), true);
         bufferedReader = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
         listCommand = new ListCommand(printWriter);
         getCommand = new GetCommand(printWriter, petManagementService, inventoryManagementService);
@@ -38,18 +36,25 @@ public class Task implements Runnable {
     public void run() {
         try {
 
+
             String msg = null;
             while (!Thread.interrupted()) {
+
+                System.out.println(socketClient.isClosed());
+
                 //读取到服务端发送过来的消息
                 msg = bufferedReader.readLine();
 
                 if (msg == null || "".equals(msg)) {
                     //错误，输入有误
                     printWriter.println("ERR");
+                } else if ("BEY".equals(msg)) {
+                    endCommand.execute(msg);
+                    socketClient.close();
+                    break;
                 } else if ("LIST".equals(msg)) { //客户端需要查询宠物的受欢迎的程度
                     //执行
                     listCommand.execute(msg);
-
                 } else {
                     //执行
                     getCommand.execute(msg);

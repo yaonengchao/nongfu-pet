@@ -16,13 +16,13 @@ public interface ClientService {
      * 拦截输入
      */
     default boolean interceptInput(String inputStr) {
-
         if (inputStr == null || "".equals(inputStr)) {
             return false;
         }
-
+        if ("BEY".equals(inputStr)) {
+            return true;
+        }
         if (!"LIST".equals(inputStr) && !inputStr.startsWith("GET:")) {
-
             return false;
         }
         return true;
@@ -42,19 +42,15 @@ public interface ClientService {
             System.out.println("ERR");
             return new ArrayList<>();
         }
-
         List<String> list = new ArrayList<>();
-
         printWriter.println(message);
         printWriter.flush();
-
         //确认消息
         String receiveMsg = null;//服务端发过来的信息
         while (!("OK".equals(receiveMsg = bufferedReader.readLine()) || "ERR".equals(receiveMsg))) {
             list.add(receiveMsg);
         }
         list.add(receiveMsg);
-
         return list;
     }
 

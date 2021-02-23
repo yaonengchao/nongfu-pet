@@ -46,9 +46,9 @@ public class ServerTest {
         //解析结果
         Map<String, Animal> startMap = analysisResult(startListResult);
 
-        CountDownLatch countDownLatch = new CountDownLatch(50);
+        CountDownLatch countDownLatch = new CountDownLatch(10);
 
-        for (int j = 0; j < 50; j++) {
+        for (int j = 0; j < 100; j++) {
             int[] numbers = new int[100];
             Random random = new Random();
             for (int i = 0; i < numbers.length; i++) {
@@ -104,6 +104,9 @@ public class ServerTest {
                             List<String> result = this.sendMessages(printWriter, bufferedReader, sendMsg);
                             result.forEach(System.out::print);
                         }
+
+                        this.sendMessages(printWriter, bufferedReader, "BEY");
+
                     }
                 });
                 try {
