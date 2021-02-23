@@ -46,9 +46,9 @@ public class ServerTest {
         //解析结果
         Map<String, Animal> startMap = analysisResult(startListResult);
 
-        CountDownLatch countDownLatch = new CountDownLatch(10);
+        CountDownLatch countDownLatch = new CountDownLatch(50);
 
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 50; j++) {
             int[] numbers = new int[100];
             Random random = new Random();
             for (int i = 0; i < numbers.length; i++) {
@@ -73,19 +73,16 @@ public class ServerTest {
 
             }
 
-
-            new Thread(() -> {
+            Thread t = new Thread(() -> {
 
                 TcpClient tcpClient = new TcpClient(new ClientService() {
 
                     @Override
                     public void sendMessagesByDIY(PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
                         String sendMsg = null;
+                        for (int number : numbers) {
 
-
-                        for (int i = 0; i < numbers.length; i++) {
-
-                            switch (numbers[i]) {
+                            switch (number) {
                                 case 0:
                                     sendMsg = "GET:dog";
                                     break;
@@ -104,21 +101,25 @@ public class ServerTest {
                             List<String> result = this.sendMessages(printWriter, bufferedReader, sendMsg);
                             result.forEach(System.out::print);
                         }
-
                         this.sendMessages(printWriter, bufferedReader, "BEY");
 
                     }
                 });
                 try {
                     tcpClient.start();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 countDownLatch.countDown();
-            }).start();
+
+
+            });
+            t.start();
         }
         try {
             countDownLatch.await();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
