@@ -3,20 +3,15 @@ package com.nf.socket.test;
 import com.nf.socket.beans.Animal;
 import com.nf.socket.client.ClientService;
 import com.nf.socket.client.TcpClient;
-import com.nf.socket.constant.Constant;
 import com.nf.socket.utils.Sorter;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Stream;
 
 public class ServerTest {
     List<String> result = null;
